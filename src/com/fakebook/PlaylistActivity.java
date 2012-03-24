@@ -13,7 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
-import android.widget.ViewSwitcher;
+import android.widget.ViewAnimator;
 
 	
 public class PlaylistActivity extends Activity {
@@ -68,15 +68,14 @@ public class PlaylistActivity extends Activity {
 			return;
 		}
 		
-		//ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.songSwitcher);
+		ViewAnimator switcher = (ViewAnimator) findViewById(R.id.songSwitcher);
 
 		
 		songImage = (ImageView) findViewById(R.id.imageView);
 		
 		File imgFile = new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(0));
 		if (imgFile.exists()) {			
-			
-			System.out.println(imgFile.toString());
+			System.out.println(switcher.getDisplayedChild());
 			songImage.setImageURI(Uri.fromFile(imgFile));
 		}
 		
