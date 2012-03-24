@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,16 +33,17 @@ public class FakebookActivity extends Activity {
 	private String[] getFileList()
 	{
 		File dir = new File(APPLICATION_DIRECTORY);
-		return dir.list(new FilenameFilter() {
-			public boolean accept(File dir, String filename) {
-				for (String ext : VALID_EXTENSIONS) {
-					if (filename.endsWith(ext)) {
-						return true;
-					}
+		String[] fileList = dir.list();
+		List<String> songList = new LinkedList<String>();
+		for (String song : fileList) {
+			song = Character.toUpperCase(song.charAt(0)) + song.substring(1);
+			for (String ext : VALID_EXTENSIONS) {
+				if (song.endsWith(ext)) {
+					songList.add(song);
 				}
-				return false;
 			}
-		});
+		}
+		return songList.toArray(new String[songList.size()]);
 	}
 	
 	@Override

@@ -30,7 +30,7 @@ public class FileStringArrayAdapter extends ArrayAdapter<String> implements Sect
 			}
 			songIndex++;
 		}
-		startLetters = starts.toArray(new Character[0]);
+		startLetters = starts.toArray(new Character[starts.size()]);
 	}
 	
 	public FileStringArrayAdapter(Context context, int textViewResourceId, String[] files) {
@@ -40,7 +40,7 @@ public class FileStringArrayAdapter extends ArrayAdapter<String> implements Sect
 	
 	public FileStringArrayAdapter(Context context, int textViewResourceId, List<String> files) {
 		super(context, textViewResourceId, files);
-		setLetterIndexes(files.toArray(new String[0]));
+		setLetterIndexes(files.toArray(new String[files.size()]));
 	}
 
 	@Override
