@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
+import android.widget.ViewSwitcher;
 
 	
 public class PlaylistActivity extends Activity {
@@ -74,9 +75,7 @@ public class PlaylistActivity extends Activity {
 		
 		File imgFile = new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(0));
 		if (imgFile.exists()) {			
-//			songImage.setMinimumHeight(50000);
-			//songImage.setScaleType(ImageView.ScaleType.FIT_XY);
-			//songImage.setAdjustViewBounds(false);
+			
 			System.out.println(imgFile.toString());
 			songImage.setImageURI(Uri.fromFile(imgFile));
 		}

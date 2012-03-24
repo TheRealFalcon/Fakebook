@@ -1,18 +1,46 @@
 package com.fakebook;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
+import android.widget.SectionIndexer;
 
-public class FileStringArrayAdapter extends ArrayAdapter<String>
+public class FileStringArrayAdapter extends ArrayAdapter<String> implements SectionIndexer
 {	
-	public FileStringArrayAdapter(Context context, int textViewResourceId, String[] objects) {
-		super(context, textViewResourceId, objects);
+	private static final int ASCII_UPPER_START = 65;
+	HashMap<Integer, Integer> letterIndexes;
+	Character startLetters[];
+	
+	private void setLetterIndexes(String[] files)
+	{
+		letterIndexes = new HashMap<Integer, Integer>();
+		ArrayList<Character> starts = new ArrayList<Character>();
+		char previousLetter = 'a';
+		int sectionIndex = 0;
+		int songIndex = 0;
+		for (String name : files) {
+			char currentLetter = name.toUpperCase().charAt(0);
+			if (currentLetter != previousLetter) {
+				starts.add(currentLetter);
+				letterIndexes.put(sectionIndex++, songIndex);
+				previousLetter = currentLetter;
+			}
+			songIndex++;
+		}
+		startLetters = starts.toArray(new Character[0]);
 	}
 	
-	public FileStringArrayAdapter(Context context, int textViewResourceId, List<String> objects) {
-		super(context, textViewResourceId, objects);
+	public FileStringArrayAdapter(Context context, int textViewResourceId, String[] files) {
+		super(context, textViewResourceId, files);
+		setLetterIndexes(files);
+	}
+	
+	public FileStringArrayAdapter(Context context, int textViewResourceId, List<String> files) {
+		super(context, textViewResourceId, files);
+		setLetterIndexes(files.toArray(new String[0]));
 	}
 
 	@Override
@@ -25,6 +53,23 @@ public class FileStringArrayAdapter extends ArrayAdapter<String>
 			}
 		}
 		return filename;
+	}
+	
+	public String getFilename(int position)
+	{
+		return super.getItem(position);
+	}
+
+	public int getPositionForSection(int arg0) {
+		return letterIndexes.get(arg0);
+	}
+
+	public int getSectionForPosition(int arg0) {
+		return super.getItem(arg0).charAt(0) - ASCII_UPPER_START;
+	}
+
+	public Character[] getSections() {
+		return startLetters;
 	}
 
 }

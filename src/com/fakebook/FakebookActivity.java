@@ -3,6 +3,7 @@ package com.fakebook;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -55,7 +56,7 @@ public class FakebookActivity extends Activity {
 	{
 		
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		String menuItem = playlistAdapter.getItem(info.position);
+		String menuItem = playlistAdapter.getFilename(info.position);
 		switch (item.getItemId()) {
 		case R.id.move_to_top_item:
 			playlistAdapter.remove(menuItem);
@@ -95,9 +96,9 @@ public class FakebookActivity extends Activity {
         	alert.show();
         	return;
         }
+        Arrays.sort(fileList);
         
         final ArrayList<String> playlistData = new ArrayList<String>();
-        
         
         
         ListView catalog = (ListView) findViewById(R.id.catalogView);
@@ -105,6 +106,7 @@ public class FakebookActivity extends Activity {
         Button okButton = (Button) findViewById(R.id.okButton);
         Button clearButton = (Button) findViewById(R.id.clearButton);
         
+        catalog.setFastScrollEnabled(true);
         
         catalog.setAdapter(new FileStringArrayAdapter(this, R.layout.list_item, fileList));
         playlistAdapter = new FileStringArrayAdapter(this, R.layout.list_item, playlistData);
