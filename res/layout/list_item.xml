@@ -3,7 +3,7 @@
    android:id="@+id/listItem" 
    android:layout_width="fill_parent" 
    android:layout_height="wrap_content" 
-   android:textSize="17sp"
+   android:textSize="20sp"
    android:paddingTop="5dip"
    android:paddingBottom="5dip"
    android:paddingLeft="2dip"

@@ -2,6 +2,7 @@ package com.fakebook;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ViewAnimator;
 
 	
@@ -20,6 +22,7 @@ public class PlaylistActivity extends Activity {
 	private GestureDetector gestures;
 	private ArrayList<String> filenames;
 	private ImageView songImage;
+	private TextView songText;
 	private static int fileIndex = 0;
 	
 	private class GestureHandler extends SimpleOnGestureListener 
@@ -68,15 +71,33 @@ public class PlaylistActivity extends Activity {
 			return;
 		}
 		
-		ViewAnimator switcher = (ViewAnimator) findViewById(R.id.songSwitcher);
-
-		
+		ViewAnimator switcher = (ViewAnimator) findViewById(R.id.songSwitcher);		
 		songImage = (ImageView) findViewById(R.id.imageView);
+		songText = (TextView) findViewById(R.id.textView);
+		
 		
 		File imgFile = new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(0));
 		if (imgFile.exists()) {			
-			System.out.println(switcher.getDisplayedChild());
-			songImage.setImageURI(Uri.fromFile(imgFile));
+			System.out.println(imgFile.getName());
+			if (imgFile.getName().endsWith(".txt")) {
+				System.out.println("Text file!");
+				switcher.setDisplayedChild(1);
+				StringBuilder fileText = new StringBuilder();
+				Scanner scanner = null;
+				try {
+					scanner = new Scanner(imgFile);
+				} catch (Exception e) {} //not gonna happen
+				while (scanner.hasNextLine()) {
+					fileText.append(scanner.nextLine() + "\n");
+				}
+				System.out.println(songText.toString());
+				songText.setText(fileText.toString());
+				//songText.set
+				
+			}
+			else {
+				songImage.setImageURI(Uri.fromFile(imgFile));
+			}
 		}
 		
 //		ImageSwitcher im = new ImageSwitcher(this);

@@ -1,7 +1,6 @@
 package com.fakebook;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -24,16 +23,20 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class FakebookActivity extends Activity {
 	public static final String APPLICATION_DIRECTORY = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Fakebook/";
-	public static final String[] VALID_EXTENSIONS = {".png", ".jpg", ".bmp"};
+	public static final String[] VALID_EXTENSIONS = {".png", ".jpg", ".bmp", ".txt"};
 	private FileStringArrayAdapter playlistAdapter;
 	
 	private String[] getFileList()
 	{
 		File dir = new File(APPLICATION_DIRECTORY);
 		String[] fileList = dir.list();
+		if (fileList == null) {
+			return null;
+		}
 		List<String> songList = new LinkedList<String>();
 		for (String song : fileList) {
 			song = Character.toUpperCase(song.charAt(0)) + song.substring(1);
