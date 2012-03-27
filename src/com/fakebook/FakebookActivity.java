@@ -1,7 +1,6 @@
 package com.fakebook;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -11,8 +10,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
@@ -26,24 +25,35 @@ import android.widget.Button;
 import android.widget.ListView;
 
 public class FakebookActivity extends Activity {
-	public static final String APPLICATION_DIRECTORY = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Fakebook/";
-	public static final String[] VALID_EXTENSIONS = {".png", ".jpg", ".bmp"};
 	private FileStringArrayAdapter playlistAdapter;
 	
-	private String[] getFileList()
+	private String[] getFileList(String dirString)
 	{
-		File dir = new File(APPLICATION_DIRECTORY);
+		File dir = new File(dirString);
+		System.out.println(dirString);
 		String[] fileList = dir.list();
 		List<String> songList = new LinkedList<String>();
 		for (String song : fileList) {
 			song = Character.toUpperCase(song.charAt(0)) + song.substring(1);
-			for (String ext : VALID_EXTENSIONS) {
+			for (String ext : Resources.getValidExtensions()) {
 				if (song.endsWith(ext)) {
 					songList.add(song);
 				}
 			}
 		}
 		return songList.toArray(new String[songList.size()]);
+	}
+	
+	private void showError(String message)
+	{
+        	AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        	alert.setMessage(message);
+        	alert.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+        		public void onClick(DialogInterface arg0, int arg1) {
+        			finish();
+        		}
+        	});
+        	alert.show();
 	}
 	
 	@Override
@@ -87,19 +97,23 @@ public class FakebookActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        final String[] fileList = getFileList();
+        SharedPreferences settings = getPreferences(MODE_PRIVATE);
+        String appDir = settings.getString("ApplicationDirectory", Resources.getApplicationDirectory(settings));
+        if (appDir == null) {
+        	showError("Cannot find SD card");
+        	return;
+        }
+        
+        final String[] fileList = getFileList(appDir);
         if (fileList == null) {
-        	AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        	alert.setMessage("No files found!\nPut your music image files in a directory named 'Fakebook' at the root of the SD card");
-        	alert.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-        		public void onClick(DialogInterface arg0, int arg1) {
-        			finish();
-        		}
-        	});
-        	alert.show();
+        	showError("No files found!\nPut your music image files in a directory named 'Fakebook' at the root of the SD card");
         	return;
         }
         Arrays.sort(fileList);
+        
+        for (String blah : fileList) {
+        	System.out.println(blah);
+        }
         
         final ArrayList<String> playlistData = new ArrayList<String>();
         

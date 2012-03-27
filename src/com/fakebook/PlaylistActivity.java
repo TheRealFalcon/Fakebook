@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -21,6 +22,7 @@ public class PlaylistActivity extends Activity {
 	private ArrayList<String> filenames;
 	private ImageView songImage;
 	private static int fileIndex = 0;
+	private String applicationDir;
 	
 	private class GestureHandler extends SimpleOnGestureListener 
 	{
@@ -45,14 +47,14 @@ public class PlaylistActivity extends Activity {
 	public void nextSong()
 	{
 		if (fileIndex < filenames.size() - 1) {
-			songImage.setImageURI(Uri.fromFile(new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(++fileIndex))));
+			songImage.setImageURI(Uri.fromFile(new File(applicationDir + filenames.get(++fileIndex))));
 		}
 	}
 	
 	public void previousSong()
 	{
 		if (fileIndex > 0) {
-			songImage.setImageURI(Uri.fromFile(new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(--fileIndex))));
+			songImage.setImageURI(Uri.fromFile(new File(applicationDir + filenames.get(--fileIndex))));
 		}
 	}
 
@@ -61,6 +63,9 @@ public class PlaylistActivity extends Activity {
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.song);
+		
+		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		applicationDir = prefs.getString("ApplicationDirectory", Resources.getApplicationDirectory(prefs));
 		
 		Intent i = this.getIntent();
 		filenames = i.getStringArrayListExtra("filenames");		
@@ -73,7 +78,7 @@ public class PlaylistActivity extends Activity {
 		
 		songImage = (ImageView) findViewById(R.id.imageView);
 		
-		File imgFile = new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(0));
+		File imgFile = new File(applicationDir + filenames.get(0));
 		if (imgFile.exists()) {			
 			System.out.println(switcher.getDisplayedChild());
 			songImage.setImageURI(Uri.fromFile(imgFile));

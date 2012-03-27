@@ -47,7 +47,7 @@ public class FileStringArrayAdapter extends ArrayAdapter<String> implements Sect
 	public String getItem(int position)
 	{
 		String filename = super.getItem(position);
-		for (String ext : FakebookActivity.VALID_EXTENSIONS) {
+		for (String ext : Resources.getValidExtensions()) {
 			if (filename.endsWith(ext)) {
 				return filename.substring(0, filename.length() - ext.length());
 			}
