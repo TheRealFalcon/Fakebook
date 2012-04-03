@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 
 public class Resources {
-	private static final String[] VALID_EXTENSIONS = {".png", ".jpg", ".bmp"};
+	private static final String[] VALID_EXTENSIONS = {".png", ".jpg", ".bmp", ".txt"};
 	private static final String APPLICATION_NAME = "fakebook";
 	public static String getApplicationDirectory(SharedPreferences settings)
 	{

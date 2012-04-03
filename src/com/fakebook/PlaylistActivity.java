@@ -15,7 +15,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.ViewAnimator;
 
 	
@@ -66,7 +65,6 @@ public class PlaylistActivity extends Activity {
 	public void nextSong()
 	{
 		if (fileIndex < filenames.size() - 1) {
-//			songImage.setImageURI(Uri.fromFile(new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(++fileIndex))));
 			displayNewSong(applicationDir + filenames.get(++fileIndex));
 		}
 	}
@@ -74,8 +72,7 @@ public class PlaylistActivity extends Activity {
 	public void previousSong()
 	{
 		if (fileIndex > 0) {
-//			songImage.setImageURI(Uri.fromFile(new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(--fileIndex))));
-			displayNewSong(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(--fileIndex));
+			displayNewSong(applicationDir + filenames.get(--fileIndex));
 		}
 	}
 	
