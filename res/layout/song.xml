@@ -9,11 +9,11 @@
       android:layout_height="fill_parent"
       android:scaleType="fitXY" >
    </ImageView>
-   <TextView
+   <com.fakebook.AutoResizeTextView
       android:id="@+id/textView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:typeface="monospace" >
-   </TextView>
+   </com.fakebook.AutoResizeTextView>
    
 </ViewAnimator>

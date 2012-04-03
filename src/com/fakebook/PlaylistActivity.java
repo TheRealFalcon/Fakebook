@@ -22,8 +22,24 @@ public class PlaylistActivity extends Activity {
 	private GestureDetector gestures;
 	private ArrayList<String> filenames;
 	private ImageView songImage;
-	private TextView songText;
+	private AutoResizeTextView songText;
+	private ViewAnimator songSwitcher;
 	private static int fileIndex = 0;
+	
+	private enum SwitcherChildren {
+		IMAGE(0),
+		TEXT(1);
+		
+		private int id;
+		
+		private SwitcherChildren(int id) {
+			this.id = id;
+		}
+		
+		public int getValue() {
+			return id;
+		}
+	}
 	
 	private class GestureHandler extends SimpleOnGestureListener 
 	{
@@ -48,14 +64,39 @@ public class PlaylistActivity extends Activity {
 	public void nextSong()
 	{
 		if (fileIndex < filenames.size() - 1) {
-			songImage.setImageURI(Uri.fromFile(new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(++fileIndex))));
+//			songImage.setImageURI(Uri.fromFile(new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(++fileIndex))));
+			displayNewSong(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(++fileIndex));
 		}
 	}
 	
 	public void previousSong()
 	{
 		if (fileIndex > 0) {
-			songImage.setImageURI(Uri.fromFile(new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(--fileIndex))));
+//			songImage.setImageURI(Uri.fromFile(new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(--fileIndex))));
+			displayNewSong(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(--fileIndex));
+		}
+	}
+	
+	private void displayNewSong(String filename) {
+		File nextFile = new File(filename);
+		if (nextFile.exists()) {			
+			System.out.println(nextFile.getName());
+			if (nextFile.getName().endsWith(".txt")) {
+				songSwitcher.setDisplayedChild(SwitcherChildren.TEXT.getValue());
+				StringBuilder fileText = new StringBuilder();
+				Scanner scanner = null;
+				try {
+					scanner = new Scanner(nextFile);
+				} catch (Exception e) {} //not gonna happen
+				while (scanner.hasNextLine()) {
+					fileText.append(scanner.nextLine() + "\n");
+				}
+				songText.setText(fileText.toString());
+			}
+			else {
+				songSwitcher.setDisplayedChild(SwitcherChildren.IMAGE.getValue());
+				songImage.setImageURI(Uri.fromFile(nextFile));
+			}
 		}
 	}
 
@@ -71,45 +112,15 @@ public class PlaylistActivity extends Activity {
 			return;
 		}
 		
-		ViewAnimator switcher = (ViewAnimator) findViewById(R.id.songSwitcher);		
+		songSwitcher = (ViewAnimator) findViewById(R.id.songSwitcher);		
 		songImage = (ImageView) findViewById(R.id.imageView);
-		songText = (TextView) findViewById(R.id.textView);
+		songText = (AutoResizeTextView) findViewById(R.id.textView);
+		songText.setMinTextSize(2);
 		
-		
-		File imgFile = new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(0));
-		if (imgFile.exists()) {			
-			System.out.println(imgFile.getName());
-			if (imgFile.getName().endsWith(".txt")) {
-				System.out.println("Text file!");
-				switcher.setDisplayedChild(1);
-				StringBuilder fileText = new StringBuilder();
-				Scanner scanner = null;
-				try {
-					scanner = new Scanner(imgFile);
-				} catch (Exception e) {} //not gonna happen
-				while (scanner.hasNextLine()) {
-					fileText.append(scanner.nextLine() + "\n");
-				}
-				System.out.println(songText.toString());
-				songText.setText(fileText.toString());
-				//songText.set
-				
-			}
-			else {
-				songImage.setImageURI(Uri.fromFile(imgFile));
-			}
-		}
-		
-//		ImageSwitcher im = new ImageSwitcher(this);
-//		
-//		final Animation inLeft = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
-//		final Animation inLeft = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
-//		im.setFactory(this);
-//		im.setImageURI(Uri.fromFile(imgFile));
-		
+		displayNewSong(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(0));
 		
 		gestures = new GestureDetector(this, new GestureHandler());		
-		songImage.setOnTouchListener(new OnTouchListener() {
+		songSwitcher.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
 				return gestures.onTouchEvent(event);
 			}
