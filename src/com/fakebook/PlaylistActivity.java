@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -25,6 +26,7 @@ public class PlaylistActivity extends Activity {
 	private AutoResizeTextView songText;
 	private ViewAnimator songSwitcher;
 	private static int fileIndex = 0;
+	private String applicationDir;
 	
 	private enum SwitcherChildren {
 		IMAGE(0),
@@ -65,7 +67,7 @@ public class PlaylistActivity extends Activity {
 	{
 		if (fileIndex < filenames.size() - 1) {
 //			songImage.setImageURI(Uri.fromFile(new File(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(++fileIndex))));
-			displayNewSong(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(++fileIndex));
+			displayNewSong(applicationDir + filenames.get(++fileIndex));
 		}
 	}
 	
@@ -106,6 +108,9 @@ public class PlaylistActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.song);
 		
+		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		applicationDir = prefs.getString("ApplicationDirectory", Resources.getApplicationDirectory(prefs));
+		
 		Intent i = this.getIntent();
 		filenames = i.getStringArrayListExtra("filenames");		
 		if (filenames.size() < 1) {
@@ -117,7 +122,7 @@ public class PlaylistActivity extends Activity {
 		songText = (AutoResizeTextView) findViewById(R.id.textView);
 		songText.setMinTextSize(2);
 		
-		displayNewSong(FakebookActivity.APPLICATION_DIRECTORY + filenames.get(0));
+		displayNewSong(applicationDir + filenames.get(0));
 		
 		gestures = new GestureDetector(this, new GestureHandler());		
 		songSwitcher.setOnTouchListener(new OnTouchListener() {
