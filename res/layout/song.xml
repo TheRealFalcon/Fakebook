@@ -15,5 +15,10 @@
       android:layout_height="wrap_content"
       android:typeface="monospace" >
    </com.fakebook.AutoResizeTextView>
+   <net.sf.andpdf.pdfviewer.PdfViewerActivity
+       android:id="@+id/pdfView"
+       android:layout_width="fill_parent"
+       android:layout_height="fill_parent" >
+   </net.sf.andpdf.pdfviewer.PdfViewerActivity>
    
 </ViewAnimator>

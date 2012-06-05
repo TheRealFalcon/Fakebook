@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -21,13 +20,16 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 public class FakebookActivity extends Activity {
 //	public static final String APPLICATION_DIRECTORY = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Fakebook/";
 //	public static final String[] VALID_EXTENSIONS = {".png", ".jpg", ".bmp", ".txt"};
 	private FileStringArrayAdapter playlistAdapter;
+	private Resources resources;
 	
 	private String[] getFileList(String dirString)
 	{
@@ -49,16 +51,46 @@ public class FakebookActivity extends Activity {
 		return songList.toArray(new String[songList.size()]);
 	}
 	
-	private void showError(String message)
+	private void setNewDirectory() {
+		final View layout = View.inflate(this, R.layout.set_directory, null);
+		final EditText dirText = ((EditText) layout.findViewById(R.id.setDirectoryEdit));
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		//alert.setView(((LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(R.layout.set_directory, (ViewGroup)findViewById(R.id.setDirectoryLayout)))
+		alert.setView(layout)
+			.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					String appDir = dirText.getText().toString();
+					if (!resources.setApplicationDirectory(appDir)) {
+						showBadDirectoryError("Not a valid directory!");
+					}
+					else {
+						startActivity();
+					}
+				}})
+			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					FakebookActivity.this.finish();
+				}
+			})
+			.show();
+	
+	}
+	
+	private void showBadDirectoryError(String message)
 	{
         	AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        	alert.setMessage(message);
-        	alert.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-        		public void onClick(DialogInterface arg0, int arg1) {
-        			finish();
-        		}
-        	});
-        	alert.show();
+        	alert.setMessage(message)
+        		.setPositiveButton("Set Directory", new DialogInterface.OnClickListener() {
+        			public void onClick(DialogInterface dialog, int id) {
+        				setNewDirectory();
+        			}
+        		})
+        		.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+        			public void onClick(DialogInterface dialog, int id) {	
+        				FakebookActivity.this.finish();
+        			}
+        		})
+        		.show();
 	}
 	
 	@Override
@@ -100,18 +132,22 @@ public class FakebookActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
+        startActivity();
+    }
+    
+    private void startActivity() {
         setContentView(R.layout.main);
         
-        SharedPreferences settings = getPreferences(MODE_PRIVATE);
-        String appDir = settings.getString("ApplicationDirectory", Resources.getApplicationDirectory(settings));
+        resources = new Resources(this);
+        String appDir = resources.getApplicationDirectory();
         if (appDir == null) {
-        	showError("Cannot find SD card");
+        	showBadDirectoryError("Cannot find fakebook directory on SD card");
         	return;
         }
         
         final String[] fileList = getFileList(appDir);
-        if (fileList == null) {
-        	showError("No files found!\nPut your music image files in a directory named 'Fakebook' at the root of the SD card");
+        if (fileList == null || fileList.length == 0) {
+        	showBadDirectoryError("No files found!\nPut your music image files in the application directory");
         	return;
         }
         Arrays.sort(fileList);
@@ -128,6 +164,7 @@ public class FakebookActivity extends Activity {
         catalog.setFastScrollEnabled(true);
         
         catalog.setAdapter(new FileStringArrayAdapter(this, R.layout.list_item, fileList));
+        //catalog.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item, fileList));
         playlistAdapter = new FileStringArrayAdapter(this, R.layout.list_item, playlistData);
         playlist.setAdapter(playlistAdapter);  
         

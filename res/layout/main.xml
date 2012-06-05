@@ -3,14 +3,29 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >        <TextView
+            android:id="@+id/catalogLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/catalog"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+		<TextView
+		    android:id="@+id/playlistLabel"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="0.5"
+		    android:text="@string/playlist"
+		    android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/viewLayout"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="0.9"
         android:baselineAligned="false" >
-
         <ListView
             android:id="@+id/catalogView"
             android:layout_width="fill_parent"
@@ -18,7 +33,11 @@
             android:layout_weight="0.5" >
             <!-- Preview: listitem=@layout/list_item -->
         </ListView>
-
+        <View
+            android:layout_width="2dip"
+            android:layout_height="2000dip"
+            android:background="@android:color/darker_gray" />
+
         <ListView
             android:id="@+id/playlistView"
             android:layout_width="fill_parent"
@@ -26,7 +45,7 @@
             android:layout_weight="0.5" />
 
     </LinearLayout>
-
+
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="fill_parent"

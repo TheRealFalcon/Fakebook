@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="clear_button">Clear</string>
-    <string name="app_name">Fakebook</string>
+    <string name="app_name">MusicBinder</string>
+    <string name="music_location">Music Directory:</string>
+    <string name="catalog">Catalog</string>
+    <string name="playlist">Playlist</string>
 </resources>

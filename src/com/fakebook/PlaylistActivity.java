@@ -4,17 +4,22 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import net.sf.andpdf.pdfviewer.PdfViewerActivity;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 	
@@ -26,6 +31,8 @@ public class PlaylistActivity extends Activity {
 	private ViewAnimator songSwitcher;
 	private static int fileIndex = 0;
 	private String applicationDir;
+	private Resources resources;
+	private Toast currentToast;
 	
 	private enum SwitcherChildren {
 		IMAGE(0),
@@ -77,6 +84,19 @@ public class PlaylistActivity extends Activity {
 	}
 	
 	private void displayNewSong(String filename) {
+		currentToast.cancel();
+		String name = new File(filename).getName();
+		name = name.substring(0, name.lastIndexOf("."));
+		//currentToast = new Toast(this);//.makeText(this, name, Toast.LENGTH_SHORT);
+		currentToast.setGravity(Gravity.BOTTOM, 0, 2);
+//		TextView toastText = (TextView) findViewById(R.id.toastSongText);
+//		LayoutInflater inflater = getLayoutInflater();
+		TextView toastText = (TextView) getLayoutInflater().inflate(R.layout.toast_songname,
+				(ViewGroup) findViewById(R.id.toastSongText));
+
+		toastText.setText(name);
+		currentToast.setView(toastText);
+		currentToast.show();
 		File nextFile = new File(filename);
 		if (nextFile.exists()) {			
 			System.out.println(nextFile.getName());
@@ -92,6 +112,20 @@ public class PlaylistActivity extends Activity {
 				}
 				songText.setText(fileText.toString());
 			}
+			else if (nextFile.getName().endsWith(".pdf")) {
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setDataAndType(Uri.fromFile(nextFile), "application/pdf");
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+				try {
+					startActivity(intent);
+				} 
+				catch (ActivityNotFoundException e) {
+					Toast.makeText(this, 
+							"No Application Available to View PDF", 
+							Toast.LENGTH_SHORT).show();
+				}
+			}
 			else {
 				songSwitcher.setDisplayedChild(SwitcherChildren.IMAGE.getValue());
 				songImage.setImageURI(Uri.fromFile(nextFile));
@@ -105,8 +139,9 @@ public class PlaylistActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.song);
 		
-		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-		applicationDir = prefs.getString("ApplicationDirectory", Resources.getApplicationDirectory(prefs));
+		resources = new Resources(this);
+		applicationDir = resources.getApplicationDirectory();
+		currentToast = new Toast(this);
 		
 		Intent i = this.getIntent();
 		filenames = i.getStringArrayListExtra("filenames");		
