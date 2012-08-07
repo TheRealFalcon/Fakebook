@@ -1,7 +1,7 @@
 Fakebook
 ========
 
-This project was originally created as a way to learn Android, and to act as an electronic "Fakebook" (not to be confused with Facebook).  A fakebook is a book of musical lead sheets that allows a musician to 'fake it' through a song that they don't really know.  Since I have a large collection of sheet music and chord sheets, my plan was to digitize all the music and use my tablet (a nook color) to play it.  After trying it, I realized the NCs screen is way too small to actually read much music, and android's lack of decent pdf support was a setback as well.  Since my tablet is too small to read music on, I've pretty much abandoned this project.  If I ever get a bigger tablet, I might pick it back up again, but by that time 'OnSong' will probably have an android port that would blow away anything I'm making.
+This project was originally created as a way for me to learn Android, and to act as an electronic "Fakebook" (not to be confused with Facebook).  A fakebook is a book of musical lead sheets that allows a musician to 'fake it' through a song that they don't really know.  Since I have a large collection of sheet music and chord sheets, my plan was to digitize all the music and use my tablet (a nook color) to play it.  After trying it, I realized the NCs screen is way too small to actually read much music, and android's lack of decent pdf support was a setback as well.  Since my tablet is too small to read music on, I've pretty much abandoned this project.  If I ever get a bigger tablet, I might pick it back up again, but by that time 'OnSong' will probably have an android port that would blow away anything I'm making.
 
 Usage
 -----
